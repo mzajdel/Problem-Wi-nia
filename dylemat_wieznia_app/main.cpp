@@ -10,7 +10,7 @@
 #define ZDRADA 1
 
 #define LICZBA_WIEZNIOW 20
-
+ 
 #define wspolczynnik_elitaryzmu 0.1
 #define prawdop_mutacji 0.2
 
@@ -33,12 +33,15 @@ public:
 	bool poprzednie[6];
 	unsigned int wyrok;
 	int id;
+	unsigned int ilosc_przesluchan;
 	Osobnik()
 	{
 		static int id_stat = 0;
 		id_stat++;
 		id = id_stat;
 		wyrok = 0;
+		ilosc_przesluchan = 0;
+		
 	}
 
 	void inicjalizuj()
@@ -53,6 +56,10 @@ public:
 	void wyswietl_chromosom();
 	void wyswietl_poprzednie();
 	void wyswietl_osobnika();
+	unsigned int srednia()
+	{
+		return wyrok / ilosc_przesluchan;
+	}
 };
 
 /*************************************************************************************************
@@ -82,7 +89,7 @@ public:
 	}
 
 	struct porownaj_wyrok {
-		inline bool operator() (const Osobnik& osobnik1, const Osobnik& osobnik2); 
+		inline bool operator() (Osobnik& osobnik1, Osobnik& osobnik2); 
 	};
 
 	void sortuj() {
@@ -171,7 +178,10 @@ void przesluchanie(Osobnik &A, Osobnik &B)
 	cout << "przesluchanie nr " << licznik << endl;
 	bool a = A.chromosom[bin_to_dec(B.poprzednie)]; //wiêzieñ A podejmuje decyzjê w oparciu o strategie wiêŸnia B w poprzednich przes³uchaniach
 	bool b = B.chromosom[bin_to_dec(A.poprzednie)]; //wiêzieñ B analogicznie
-	
+
+	A.ilosc_przesluchan++;
+	B.ilosc_przesluchan++;
+
 	if (a == WSPOLPRACA && b == WSPOLPRACA)
 	{
 		A.wyrok += 1;
@@ -251,6 +261,14 @@ for(int i=0;i<2;i++){
 		cout<<temp_populacja->all[i].wyrok<<endl;
 	cout<<endl<<endl;*/	
 	/*for(int i=0;i<LICZBA_WIEZNIOW;i++){
+//conflict
+	for(int i=0;i<pozostalosc_osobnikow;i++)
+		cout<<temp_populacja->all[i].srednia()<<endl;
+
+
+
+	for(int i=0;i<LICZBA_WIEZNIOW;i++){
+//conflict
 		cout<< i << ") ";
 		temp_populacja->all[i].wyswietl_chromosom();
 	}*/
@@ -315,10 +333,11 @@ int bin_to_dec(bool *bin)
 		cout << "Osobnik: " << id << endl;
 		wyswietl_chromosom();
 		wyswietl_poprzednie();
-		cout << "Wyrok: " << wyrok << " lat." << endl << endl;
+		cout << "Sredni wyrok: " << srednia() << " lat." << endl << endl;
 	}
 
-  inline bool Populacja::porownaj_wyrok::operator() (const Osobnik& osobnik1, const Osobnik& osobnik2)
+  inline bool Populacja::porownaj_wyrok::operator() (Osobnik& osobnik1, Osobnik& osobnik2)
   {
-      return (osobnik1.wyrok < osobnik2.wyrok);
+      return (osobnik1.srednia() < osobnik2.srednia());
   }
+
