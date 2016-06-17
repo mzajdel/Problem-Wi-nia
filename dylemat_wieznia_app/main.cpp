@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime> 
-#include <cstdlib>
+//#include <cstdlib>
 #include <cmath>
 #include <algorithm>
 
@@ -9,7 +9,11 @@
 #define WSPOLPRACA 0
 #define ZDRADA 1
 
-#define LICZBA_WIEZNIOW 4
+#define LICZBA_WIEZNIOW 20
+
+#define wspolczynnik_elitaryzmu 0.1
+
+const int pozostalosc_osobnikow=(int)(wspolczynnik_elitaryzmu*LICZBA_WIEZNIOW);
 int licznik = 0; //zmienna kontrolna
 
 int bin_to_dec(bool *bin);
@@ -59,7 +63,7 @@ class Populacja
 public:
 	vector <Osobnik> all;	//wektor przechowuj¹cy populacjê - wszystkich wiêŸniów
 	Populacja() {
-		inicjalizuj();
+		//inicjalizuj();
 	}
 	// ~Populacja();
 
@@ -97,6 +101,12 @@ public:
 		return all.size();
 	}
 
+	void elitaryzm( Populacja &p, Populacja &temp){
+
+		for(int i=0;i<pozostalosc_osobnikow;i++)
+			temp.all.push_back(p.all[i]);		
+	}
+
 };
 
 
@@ -111,23 +121,23 @@ void przesluchanie(Osobnik &A, Osobnik &B)
 	bool a = A.chromosom[bin_to_dec(B.poprzednie)]; //wiêzieñ A podejmuje decyzjê w oparciu o strategie wiêŸnia B w poprzednich przes³uchaniach
 	bool b = B.chromosom[bin_to_dec(A.poprzednie)]; //wiêzieñ B analogicznie
 	
-	if (a == false && b == false)
+	if (a == WSPOLPRACA && b == WSPOLPRACA)
 	{
-		A.wyrok += 2;
-		B.wyrok += 2;
+		A.wyrok += 1;
+		B.wyrok += 1;
 	}
-	else if (a == false && b == true)
+	else if (a == WSPOLPRACA && b == ZDRADA)
 	{
-		A.wyrok += 10;
+		A.wyrok += 5;
 	}
-	else if (a == true && b == false)
+	else if (a == ZDRADA && b == WSPOLPRACA)
 	{
-		B.wyrok += 10;
+		B.wyrok += 5;
 	}
-	else if (a == true && b == true)
+	else if (a == ZDRADA && b == ZDRADA)
 	{
-		A.wyrok += 10;
-		B.wyrok += 10;
+		A.wyrok += 3;
+		B.wyrok += 3;
 	}
 	else 
 		cout << "BLAD!" << endl;
@@ -168,7 +178,8 @@ int main()
 {
 	
 	Populacja *populacja = new Populacja();
-	
+	populacja->inicjalizuj();
+
 	graj_kazy_z_kazdym(populacja->all);
 
 	populacja->sortuj();
@@ -179,6 +190,13 @@ int main()
 	{
 		populacja->get(i).wyswietl_osobnika();
 	}
+
+	Populacja *temp_populacja=new Populacja();
+
+	populacja->elitaryzm(*populacja,*temp_populacja);
+
+	for(int i=0;i<pozostalosc_osobnikow;i++)
+		cout<<temp_populacja->all[i].wyrok<<endl;
 
 	delete populacja;
 
@@ -205,7 +223,7 @@ int bin_to_dec(bool *bin)
 	for (int i = 5; i >=0; i--)
 	{
 		if (bin[i] == true)
-			dec += pow(2, j);
+			dec += pow (2.0, j);
 		j++;
 	}
 	return dec;
@@ -241,4 +259,3 @@ int bin_to_dec(bool *bin)
   {
       return (osobnik1.wyrok < osobnik2.wyrok);
   }
-
