@@ -100,10 +100,10 @@ public:
 		return all.size();
 	}
 
-	void elitaryzm( Populacja &pop, Populacja &temp){
+	void elitaryzm( Populacja &p, Populacja &temp){
 
 		for(int i=0;i<pozostalosc_osobnikow;i++)
-			temp.all.push_back(pop.all[i]);		
+			temp.all.push_back(p.all[i]);		
 	}
 
 };
