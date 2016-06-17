@@ -3,6 +3,7 @@
 #include <ctime> 
 #include <cstdlib>
 #include <cmath>
+#include <algorithm>
 
 
 //#define WSPOLPRACA 0
@@ -11,7 +12,13 @@
 #define LICZBA_WIEZNIOW 20
 int licznik = 0; //zmienna kontrolna
 
+int bin_to_dec(bool *bin);
+
 using namespace std;
+
+/*****************************************************************************************************
+																									OSOBNIK
+*****************************************************************************************************/
 
 class Osobnik
 {
@@ -19,8 +26,12 @@ public:
 	bool chromosom[64];
 	bool poprzednie[6];
 	unsigned int wyrok;
+	int id;
 	Osobnik()
 	{
+		static int id_stat = 0;
+		id_stat++;
+		id = id_stat;
 		wyrok = 0;
 	}
 
@@ -28,47 +39,69 @@ public:
 	{
 		for (int i = 0; i < 64; i++) {
 			chromosom[i] = rand() % 2;
-			cout << chromosom[i];
 		}
 		for (int i = 0; i < 6; i++)
 			poprzednie[i] = rand() % 2;
 	}
 
-	void wyswietl_chromosom()
-	{
-		cout << "Chromosom: " << "[";
-		for (int i = 0; i < 63; i++)
-		{
-			cout << chromosom[i] << ",";
-		}
-		cout << chromosom[63] << "]" << endl << endl;
-	}
+	void wyswietl_chromosom();
+	void wyswietl_poprzednie();
+	void wyswietl_osobnika();
 };
 
-void inicjalizuj_populacje(vector <Osobnik> &populacja)
-{
-	Osobnik *wsk;
-	srand(time(NULL));
-	for (int i = 0; i < LICZBA_WIEZNIOW; i++)
-	{
-		wsk = new Osobnik;
-		wsk->inicjalizuj();
-		populacja.push_back(*wsk);
-	}
-}
+/*************************************************************************************************
+																							POPULACJA
+*************************************************************************************************/
 
-int bin_to_dec(bool *bin)
+class Populacja
 {
-	int dec = 0;
-	int j = 0;
-	for (int i = 5; i >=0; i--)
-	{
-		if (bin[i] == true)
-			dec += pow(2, j);
-		j++;
+public:
+	vector <Osobnik> all;	//wektor przechowuj¹cy populacjê - wszystkich wiêŸniów
+	Populacja() {
+		inicjalizuj();
 	}
-	return dec;
-}
+	// ~Populacja();
+
+	void inicjalizuj()
+	{
+		Osobnik *wsk;
+		srand(time(NULL));
+		for (int i = 0; i < LICZBA_WIEZNIOW; i++)
+		{
+			wsk = new Osobnik;
+			wsk->inicjalizuj();
+			all.push_back(*wsk);
+			delete wsk; //avoid memory leak
+		}
+	}
+
+	struct porownaj_wyrok {
+		inline bool operator() (const Osobnik& osobnik1, const Osobnik& osobnik2); 
+	};
+
+	void sortuj() {
+		sort(all.begin(), all.end(), porownaj_wyrok());
+	}
+
+	void erase_half() {
+		all.erase(all.begin()+all.size()/2, all.begin()+all.size());
+	}
+
+	Osobnik get(int el) 
+	{
+		return all[el];
+	}
+
+	int size() {
+		return all.size();
+	}
+
+};
+
+
+/******************************************************************************************************
+																												GRA
+******************************************************************************************************/
 
 void przesluchanie(Osobnik &A, Osobnik &B)
 {
@@ -114,13 +147,7 @@ void przesluchanie(Osobnik &A, Osobnik &B)
 	
 }
 
-
-
-int main() 
-{
-	vector <Osobnik> populacja;	//wektor przechowuj¹cy populacjê - wszystkich wiêŸniów
-	inicjalizuj_populacje(populacja);
-	
+void graj_kazy_z_kazdym(vector <Osobnik> &populacja) {
 	for (int i = LICZBA_WIEZNIOW - 1; i >= 0; i--)
 	{
 		for (int j = i - 1; j >= 0; j--)
@@ -128,8 +155,89 @@ int main()
 			przesluchanie(populacja[i], populacja[j]);
 		}
 	}
+}
+
+
+/******************************************************************************************************
+																								MAIN
+******************************************************************************************************/
+
+
+int main() 
+{
+	
+	Populacja *populacja = new Populacja();
+	
+	graj_kazy_z_kazdym(populacja->all);
+
+	populacja->sortuj();
+
+	populacja->erase_half();
+
+	for (int i = 0; i < populacja->size(); ++i)
+	{
+		populacja->get(i).wyswietl_osobnika();
+	}
+
+	delete populacja;
 
 
 	system("pause");
 	return 0;
 }
+
+
+
+
+
+
+// ----------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------
+
+
+
+
+int bin_to_dec(bool *bin)
+{
+	int dec = 0;
+	int j = 0;
+	for (int i = 5; i >=0; i--)
+	{
+		if (bin[i] == true)
+			dec += pow(2, j);
+		j++;
+	}
+	return dec;
+}
+
+	void Osobnik::wyswietl_chromosom()
+	{
+		cout << "Chromosom: " << "[";
+		for (int i = 0; i < 63; i++)
+		{
+			cout << chromosom[i] << ",";
+		}
+		cout << chromosom[63] << "]" << endl;
+	}
+
+	void Osobnik::wyswietl_poprzednie() {
+		cout << "Poprzednie rozgrywki: " << "[";
+		for (int i = 0; i < 6; i++)
+		{
+			cout << poprzednie[i] << ", ";
+		}
+		cout << poprzednie[5] << "]" << endl;
+	}
+
+	void Osobnik::wyswietl_osobnika() {
+		cout << "Osobnik: " << id << endl;
+		wyswietl_chromosom();
+		wyswietl_poprzednie();
+		cout << "Wyrok: " << wyrok << " lat." << endl << endl;
+	}
+
+  inline bool Populacja::porownaj_wyrok::operator() (const Osobnik& osobnik1, const Osobnik& osobnik2)
+  {
+      return (osobnik1.wyrok > osobnik2.wyrok);
+  }
+
