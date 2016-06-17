@@ -13,17 +13,18 @@
 int licznik = 0; //zmienna kontrolna
 
 int bin_to_dec(bool *bin);
-
 using namespace std;
 
 /*****************************************************************************************************
 																									OSOBNIK
 *****************************************************************************************************/
 
+
 class Osobnik
 {
 public:
 	bool chromosom[64];
+
 	bool poprzednie[6];
 	unsigned int wyrok;
 	int id;
