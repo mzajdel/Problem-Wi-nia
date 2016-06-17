@@ -231,29 +231,35 @@ int main()
 	Populacja *populacja = new Populacja();
 	populacja->inicjalizuj();
 
+	Populacja *temp_populacja=new Populacja();
+
+
+for(int i=0;i<2;i++){
 	graj_kazy_z_kazdym(populacja->all);
 
 	populacja->sortuj();
-
-	//populacja->erase_half();
 
 	for (int i = 0; i < populacja->size(); ++i)
 	{
 		populacja->get(i).wyswietl_osobnika();
 	}
 
-	Populacja *temp_populacja=new Populacja();
-
 	populacja->elitaryzm(*populacja,*temp_populacja);
 	populacja->krzyzowanie(*populacja,*temp_populacja);
 
-	for(int i=0;i<pozostalosc_osobnikow;i++)
+	/*for(int i=0;i<pozostalosc_osobnikow;i++)
 		cout<<temp_populacja->all[i].wyrok<<endl;
-
-	for(int i=0;i<LICZBA_WIEZNIOW;i++){
+	cout<<endl<<endl;*/	
+	/*for(int i=0;i<LICZBA_WIEZNIOW;i++){
 		cout<< i << ") ";
 		temp_populacja->all[i].wyswietl_chromosom();
-	}
+	}*/
+
+	for(int i=0;i<LICZBA_WIEZNIOW;i++)
+		populacja->all[i]=temp_populacja->all[i];
+	temp_populacja->all.clear();
+}
+
 
 	delete populacja;
 
