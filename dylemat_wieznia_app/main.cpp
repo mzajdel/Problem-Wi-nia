@@ -12,6 +12,7 @@
 #define LICZBA_WIEZNIOW 20
 
 #define wspolczynnik_elitaryzmu 0.1
+#define prawdop_mutacji 0.2
 
 const int pozostalosc_osobnikow=(int)(wspolczynnik_elitaryzmu*LICZBA_WIEZNIOW);
 int licznik = 0; //zmienna kontrolna
@@ -106,6 +107,56 @@ public:
 			temp.all.push_back(p.all[i]);		
 	}
 
+	void mutacja(Osobnik &o){
+
+		int gen = rand()%64;
+
+		if(o.chromosom[gen]==WSPOLPRACA)
+			o.chromosom[gen]==ZDRADA;
+		else
+			o.chromosom[gen]==WSPOLPRACA;
+	}
+
+	void krzyzowanie(Populacja &p, Populacja &temp){
+
+		int i1;
+		int i2;
+		int punkt_krzyzowania;
+		Osobnik nowy_osobnik1;
+		Osobnik nowy_osobnik2;
+
+		for (int i=pozostalosc_osobnikow; i<LICZBA_WIEZNIOW;i=i+2){
+
+			i1=rand()%LICZBA_WIEZNIOW;
+			i2=rand()%LICZBA_WIEZNIOW;
+			punkt_krzyzowania=rand()%63+1;
+
+			//krzyzowanie dla nowy_osobnik1
+			for(int i=0;i<punkt_krzyzowania;i++)
+				nowy_osobnik1.chromosom[i]=p.all[i1].chromosom[i];
+	
+			for(int i=punkt_krzyzowania;i<64;i++)
+				nowy_osobnik1.chromosom[i]=p.all[i2].chromosom[i];
+
+			//krzyzowanie dla nowy_osobnik2
+			for(int i=0;i<punkt_krzyzowania;i++)
+				nowy_osobnik2.chromosom[i]=p.all[i2].chromosom[i];
+	
+			for(int i=punkt_krzyzowania;i<64;i++)
+				nowy_osobnik2.chromosom[i]=p.all[i1].chromosom[i];
+
+			//mutacja
+			if(((float)rand() / RAND_MAX)<0.2)
+				mutacja(nowy_osobnik1);
+
+			if(((float)rand() / RAND_MAX)<0.2)
+				mutacja(nowy_osobnik2);
+
+			temp.all.push_back(nowy_osobnik1);
+			temp.all.push_back(nowy_osobnik2);
+		}
+	}
+
 };
 
 
@@ -183,7 +234,7 @@ int main()
 
 	populacja->sortuj();
 
-	populacja->erase_half();
+	//populacja->erase_half();
 
 	for (int i = 0; i < populacja->size(); ++i)
 	{
@@ -193,9 +244,15 @@ int main()
 	Populacja *temp_populacja=new Populacja();
 
 	populacja->elitaryzm(*populacja,*temp_populacja);
+	populacja->krzyzowanie(*populacja,*temp_populacja);
 
 	for(int i=0;i<pozostalosc_osobnikow;i++)
 		cout<<temp_populacja->all[i].wyrok<<endl;
+
+	for(int i=0;i<LICZBA_WIEZNIOW;i++){
+		cout<< i << ") ";
+		temp_populacja->all[i].wyswietl_chromosom();
+	}
 
 	delete populacja;
 
