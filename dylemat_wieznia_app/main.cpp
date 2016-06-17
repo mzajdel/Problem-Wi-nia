@@ -9,10 +9,10 @@
 #define WSPOLPRACA 0
 #define ZDRADA 1
 
-#define LICZBA_WIEZNIOW 20
+#define LICZBA_WIEZNIOW 500
  
 #define wspolczynnik_elitaryzmu 0.1
-#define prawdop_mutacji 0.2
+#define prawdop_mutacji 0.3
 
 const int pozostalosc_osobnikow=(int)(wspolczynnik_elitaryzmu*LICZBA_WIEZNIOW);
 int licznik = 0; //zmienna kontrolna
@@ -175,7 +175,7 @@ public:
 void przesluchanie(Osobnik &A, Osobnik &B)
 {
 	licznik++;
-	cout << "przesluchanie nr " << licznik << endl;
+	//cout << "przesluchanie nr " << licznik << endl;
 	bool a = A.chromosom[bin_to_dec(B.poprzednie)]; //wiêzieñ A podejmuje decyzjê w oparciu o strategie wiêŸnia B w poprzednich przes³uchaniach
 	bool b = B.chromosom[bin_to_dec(A.poprzednie)]; //wiêzieñ B analogicznie
 
@@ -184,21 +184,21 @@ void przesluchanie(Osobnik &A, Osobnik &B)
 
 	if (a == WSPOLPRACA && b == WSPOLPRACA)
 	{
-		A.wyrok += 1;
-		B.wyrok += 1;
+		A.wyrok += 10;
+		B.wyrok += 10;
 	}
 	else if (a == WSPOLPRACA && b == ZDRADA)
 	{
-		A.wyrok += 5;
+		A.wyrok += 50;
 	}
 	else if (a == ZDRADA && b == WSPOLPRACA)
 	{
-		B.wyrok += 5;
+		B.wyrok += 50;
 	}
 	else if (a == ZDRADA && b == ZDRADA)
 	{
-		A.wyrok += 3;
-		B.wyrok += 3;
+		A.wyrok += 30;
+		B.wyrok += 30;
 	}
 	else 
 		cout << "BLAD!" << endl;
@@ -244,16 +244,20 @@ int main()
 	Populacja *temp_populacja=new Populacja();
 
 
-for(int i=0;i<2;i++){
+for(int i=0;i<100;i++){
 	graj_kazy_z_kazdym(populacja->all);
 
 	populacja->sortuj();
 
-	for (int i = 0; i < populacja->size(); ++i)
+	/*for (int i = 0; i < populacja->size(); ++i)
 	{
 		populacja->get(i).wyswietl_osobnika();
-	}
+	}*/
 
+	//populacja->all[0].wyswietl_osobnika();
+	//cout<<populacja->all[0].wyrok;
+
+	//cout<<endl<<endl<<endl<<endl;
 	populacja->elitaryzm(*populacja,*temp_populacja);
 	populacja->krzyzowanie(*populacja,*temp_populacja);
 
@@ -277,6 +281,9 @@ for(int i=0;i<2;i++){
 		populacja->all[i]=temp_populacja->all[i];
 	temp_populacja->all.clear();
 }
+
+	populacja->all[0].wyswietl_osobnika();
+	cout<<populacja->all[0].wyrok;
 
 
 	delete populacja;
