@@ -2,6 +2,7 @@
 #include <vector>
 #include <ctime> 
 #include <cstdlib>
+#include <cmath>
 
 
 //#define WSPOLPRACA 0
@@ -111,7 +112,7 @@ void przesluchanie(Osobnik &A, Osobnik &B)
 
 
 
-bool main() 
+int main() 
 {
 	vector <Osobnik> populacja;	//wektor przechowuj¹cy populacjê - wszystkich wiêŸniów
 	inicjalizuj_populacje(populacja);
