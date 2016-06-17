@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime> 
-#include <cstdlib>
+//#include <cstdlib>
 #include <cmath>
 #include <algorithm>
 
@@ -204,7 +204,7 @@ int bin_to_dec(bool *bin)
 	for (int i = 5; i >=0; i--)
 	{
 		if (bin[i] == true)
-			dec += pow(2, j);
+			dec += pow (2.0, j);
 		j++;
 	}
 	return dec;
