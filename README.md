@@ -25,12 +25,15 @@
 1. przeprowadzamy iteracje według następujących kroków
     * gracze z obecnej populacji w parach, grają o najkrótszy wyrok, wynik zostaje dopisany do ich punktów (wyroku)
     * populacja jest sortowana według wyników - gracz z najkrótszym wyrokiem jest najlepszym osobnikiem
-    * gorsza część graczy zostaje odzucona, lepszą poddajemy krzyżowaniu wg wybranej strategii elitaryzmu
+    * gorsza część graczy zostaje odrzucona , lepszą poddajemy krzyżowaniu wg wybranej strategii elitaryzmu, najlepsze 20% osobników przechodzi do kolejnego pokolenia w stanie niezmienionym, pozostali powstają w wyniku krzyżowania z całej populacji
     * wprowadzamy losowe zmiany do części chromosomów
     * ze skrzyżowanych osobników tworzymy nową populację
 1. wybieramy najlepszego osobnika i decydujemy czy wyrok jest satysfakcjonujący
-1. kończymy dla satysfakcjinującego wyroku, w przeciwnym wypadku powtarzamy iteracje
+1. kończymy dla satysfakcjonującego wyroku, w przeciwnym wypadku powtarzamy iteracje
 
 
 ## !!!Problemy!!!
 * jak ma działać krzyżowanie - jeśli rozetniemy 70 bitów i skleimy to prawie zawsze niezmienne pozostanie ostatnie 6 bitów (tablica poprzednich trzech rozgrywek), może trzeba ją przeciąż odzielnie? albo za każdym razem losować od nowa? czy przesunąć? tego nie wiem
+
+## Rozwiązanie problemu
+Problem rozwiązany przez podzielenie 70 bitów na dwie części - pierwsza zawiera 64 bity i podlega krzyżowaniu, mutacji, elitaryzmowi. Druga część - 6 bitów jest modyfykowana w czasie przesłuchań i nie podlega strategiom algorytmu genetycznego.
