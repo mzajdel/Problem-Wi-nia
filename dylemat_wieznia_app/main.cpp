@@ -8,7 +8,7 @@
 //#define WSPOLPRACA 0
 //#define ZDRADA 1
 
-#define LICZBA_WIEZNIOW 3
+#define LICZBA_WIEZNIOW 20
 int licznik = 0; //zmienna kontrolna
 
 using namespace std;
@@ -26,18 +26,22 @@ public:
 
 	void inicjalizuj()
 	{
-		for (int i = 0; i < 64; i++)
+		for (int i = 0; i < 64; i++) {
 			chromosom[i] = rand() % 2;
+			cout << chromosom[i];
+		}
 		for (int i = 0; i < 6; i++)
 			poprzednie[i] = rand() % 2;
 	}
+
 	void wyswietl_chromosom()
 	{
-		for (int i = 0; i < 64; i++)
+		cout << "Chromosom: " << "[";
+		for (int i = 0; i < 63; i++)
 		{
-			cout << chromosom[i];
+			cout << chromosom[i] << ",";
 		}
-		cout << endl << endl;
+		cout << chromosom[63] << "]" << endl << endl;
 	}
 };
 
@@ -48,8 +52,8 @@ void inicjalizuj_populacje(vector <Osobnik> &populacja)
 	for (int i = 0; i < LICZBA_WIEZNIOW; i++)
 	{
 		wsk = new Osobnik;
-		populacja.push_back(*wsk);
 		wsk->inicjalizuj();
+		populacja.push_back(*wsk);
 	}
 }
 
@@ -124,6 +128,7 @@ int main()
 			przesluchanie(populacja[i], populacja[j]);
 		}
 	}
+
 
 	system("pause");
 	return 0;
