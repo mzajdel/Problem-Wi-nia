@@ -175,12 +175,9 @@ public:
 void przesluchanie(Osobnik &A, Osobnik &B)
 {
 	licznik++;
-	cout << "przesluchanie nr " << licznik << endl;
+	//cout << "przesluchanie nr " << licznik << endl;
 	bool a = A.chromosom[bin_to_dec(B.poprzednie)]; //wiêzieñ A podejmuje decyzjê w oparciu o strategie wiêŸnia B w poprzednich przes³uchaniach
 	bool b = B.chromosom[bin_to_dec(A.poprzednie)]; //wiêzieñ B analogicznie
-
-	A.ilosc_przesluchan++;
-	B.ilosc_przesluchan++;
 
 	if (a == WSPOLPRACA && b == WSPOLPRACA)
 	{
@@ -224,7 +221,10 @@ void graj_kazy_z_kazdym(vector <Osobnik> &populacja) {
 	{
 		for (int j = i - 1; j >= 0; j--)
 		{
-			przesluchanie(populacja[i], populacja[j]);
+			populacja[i].ilosc_przesluchan++;
+			populacja[j].ilosc_przesluchan++;
+			for(int k=0; k<50; k++)
+				przesluchanie(populacja[i], populacja[j]);
 		}
 	}
 }
@@ -244,7 +244,7 @@ int main()
 	Populacja *temp_populacja=new Populacja();
 
 
-for(int i=0;i<2;i++){
+for(int i=0;i<10;i++){
 	graj_kazy_z_kazdym(populacja->all);
 
 	populacja->sortuj();
@@ -253,25 +253,9 @@ for(int i=0;i<2;i++){
 	{
 		populacja->get(i).wyswietl_osobnika();
 	}
-
+	cout<<"\n\n\n";
 	populacja->elitaryzm(*populacja,*temp_populacja);
 	populacja->krzyzowanie(*populacja,*temp_populacja);
-
-	/*for(int i=0;i<pozostalosc_osobnikow;i++)
-		cout<<temp_populacja->all[i].wyrok<<endl;
-	cout<<endl<<endl;*/	
-	/*for(int i=0;i<LICZBA_WIEZNIOW;i++){
-//conflict
-	for(int i=0;i<pozostalosc_osobnikow;i++)
-		cout<<temp_populacja->all[i].srednia()<<endl;
-
-
-
-	for(int i=0;i<LICZBA_WIEZNIOW;i++){
-//conflict
-		cout<< i << ") ";
-		temp_populacja->all[i].wyswietl_chromosom();
-	}*/
 
 	for(int i=0;i<LICZBA_WIEZNIOW;i++)
 		populacja->all[i]=temp_populacja->all[i];
