@@ -10,7 +10,7 @@
 #define ZDRADA 1
 
 #define LICZBA_WIEZNIOW 20
-
+ 
 #define wspolczynnik_elitaryzmu 0.1
 
 const int pozostalosc_osobnikow=(int)(wspolczynnik_elitaryzmu*LICZBA_WIEZNIOW);
