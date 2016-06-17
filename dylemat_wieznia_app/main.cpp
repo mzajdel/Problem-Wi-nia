@@ -12,6 +12,7 @@
 #define LICZBA_WIEZNIOW 20
  
 #define wspolczynnik_elitaryzmu 0.1
+#define prawdop_mutacji 0.2
 
 const int pozostalosc_osobnikow=(int)(wspolczynnik_elitaryzmu*LICZBA_WIEZNIOW);
 int licznik = 0; //zmienna kontrolna
@@ -32,12 +33,15 @@ public:
 	bool poprzednie[6];
 	unsigned int wyrok;
 	int id;
+	unsigned int ilosc_przesluchan;
 	Osobnik()
 	{
 		static int id_stat = 0;
 		id_stat++;
 		id = id_stat;
 		wyrok = 0;
+		ilosc_przesluchan = 0;
+		
 	}
 
 	void inicjalizuj()
@@ -52,6 +56,10 @@ public:
 	void wyswietl_chromosom();
 	void wyswietl_poprzednie();
 	void wyswietl_osobnika();
+	unsigned int srednia()
+	{
+		return wyrok / ilosc_przesluchan;
+	}
 };
 
 /*************************************************************************************************
@@ -81,7 +89,7 @@ public:
 	}
 
 	struct porownaj_wyrok {
-		inline bool operator() (const Osobnik& osobnik1, const Osobnik& osobnik2); 
+		inline bool operator() (Osobnik& osobnik1, Osobnik& osobnik2); 
 	};
 
 	void sortuj() {
@@ -107,6 +115,56 @@ public:
 			temp.all.push_back(p.all[i]);		
 	}
 
+	void mutacja(Osobnik &o){
+
+		int gen = rand()%64;
+
+		if(o.chromosom[gen]==WSPOLPRACA)
+			o.chromosom[gen]==ZDRADA;
+		else
+			o.chromosom[gen]==WSPOLPRACA;
+	}
+
+	void krzyzowanie(Populacja &p, Populacja &temp){
+
+		int i1;
+		int i2;
+		int punkt_krzyzowania;
+		Osobnik nowy_osobnik1;
+		Osobnik nowy_osobnik2;
+
+		for (int i=pozostalosc_osobnikow; i<LICZBA_WIEZNIOW;i=i+2){
+
+			i1=rand()%LICZBA_WIEZNIOW;
+			i2=rand()%LICZBA_WIEZNIOW;
+			punkt_krzyzowania=rand()%63+1;
+
+			//krzyzowanie dla nowy_osobnik1
+			for(int i=0;i<punkt_krzyzowania;i++)
+				nowy_osobnik1.chromosom[i]=p.all[i1].chromosom[i];
+	
+			for(int i=punkt_krzyzowania;i<64;i++)
+				nowy_osobnik1.chromosom[i]=p.all[i2].chromosom[i];
+
+			//krzyzowanie dla nowy_osobnik2
+			for(int i=0;i<punkt_krzyzowania;i++)
+				nowy_osobnik2.chromosom[i]=p.all[i2].chromosom[i];
+	
+			for(int i=punkt_krzyzowania;i<64;i++)
+				nowy_osobnik2.chromosom[i]=p.all[i1].chromosom[i];
+
+			//mutacja
+			if(((float)rand() / RAND_MAX)<0.2)
+				mutacja(nowy_osobnik1);
+
+			if(((float)rand() / RAND_MAX)<0.2)
+				mutacja(nowy_osobnik2);
+
+			temp.all.push_back(nowy_osobnik1);
+			temp.all.push_back(nowy_osobnik2);
+		}
+	}
+
 };
 
 
@@ -120,7 +178,10 @@ void przesluchanie(Osobnik &A, Osobnik &B)
 	cout << "przesluchanie nr " << licznik << endl;
 	bool a = A.chromosom[bin_to_dec(B.poprzednie)]; //wiêzieñ A podejmuje decyzjê w oparciu o strategie wiêŸnia B w poprzednich przes³uchaniach
 	bool b = B.chromosom[bin_to_dec(A.poprzednie)]; //wiêzieñ B analogicznie
-	
+
+	A.ilosc_przesluchan++;
+	B.ilosc_przesluchan++;
+
 	if (a == WSPOLPRACA && b == WSPOLPRACA)
 	{
 		A.wyrok += 1;
@@ -184,7 +245,7 @@ int main()
 
 	populacja->sortuj();
 
-	populacja->erase_half();
+	//populacja->erase_half();
 
 	for (int i = 0; i < populacja->size(); ++i)
 	{
@@ -194,9 +255,17 @@ int main()
 	Populacja *temp_populacja=new Populacja();
 
 	populacja->elitaryzm(*populacja,*temp_populacja);
+	populacja->krzyzowanie(*populacja,*temp_populacja);
 
 	for(int i=0;i<pozostalosc_osobnikow;i++)
-		cout<<temp_populacja->all[i].wyrok<<endl;
+		cout<<temp_populacja->all[i].srednia()<<endl;
+
+
+
+	for(int i=0;i<LICZBA_WIEZNIOW;i++){
+		cout<< i << ") ";
+		temp_populacja->all[i].wyswietl_chromosom();
+	}
 
 	delete populacja;
 
@@ -252,10 +321,11 @@ int bin_to_dec(bool *bin)
 		cout << "Osobnik: " << id << endl;
 		wyswietl_chromosom();
 		wyswietl_poprzednie();
-		cout << "Wyrok: " << wyrok << " lat." << endl << endl;
+		cout << "Sredni wyrok: " << srednia() << " lat." << endl << endl;
 	}
 
-  inline bool Populacja::porownaj_wyrok::operator() (const Osobnik& osobnik1, const Osobnik& osobnik2)
+  inline bool Populacja::porownaj_wyrok::operator() (Osobnik& osobnik1, Osobnik& osobnik2)
   {
-      return (osobnik1.wyrok < osobnik2.wyrok);
+      return (osobnik1.srednia() < osobnik2.srednia());
   }
+
