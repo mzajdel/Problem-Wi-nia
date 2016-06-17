@@ -6,10 +6,10 @@
 #include <algorithm>
 
 
-//#define WSPOLPRACA 0
-//#define ZDRADA 1
+#define WSPOLPRACA 0
+#define ZDRADA 1
 
-#define LICZBA_WIEZNIOW 20
+#define LICZBA_WIEZNIOW 4
 int licznik = 0; //zmienna kontrolna
 
 int bin_to_dec(bool *bin);
@@ -238,6 +238,6 @@ int bin_to_dec(bool *bin)
 
   inline bool Populacja::porownaj_wyrok::operator() (const Osobnik& osobnik1, const Osobnik& osobnik2)
   {
-      return (osobnik1.wyrok > osobnik2.wyrok);
+      return (osobnik1.wyrok < osobnik2.wyrok);
   }
 
