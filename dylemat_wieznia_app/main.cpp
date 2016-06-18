@@ -56,9 +56,11 @@ public:
 	void wyswietl_chromosom();
 	void wyswietl_poprzednie();
 	void wyswietl_osobnika();
+	int sredni_wyrok;
 	unsigned int srednia()
 	{
-		return wyrok / ilosc_przesluchan;
+		sredni_wyrok = wyrok / ilosc_przesluchan;
+		return sredni_wyrok;
 	}
 };
 
@@ -89,10 +91,13 @@ public:
 	}
 
 	struct porownaj_wyrok {
-		inline bool operator() (Osobnik& osobnik1, Osobnik& osobnik2); 
+		inline bool operator() (const Osobnik& osobnik1, const Osobnik& osobnik2); 
 	};
 
 	void sortuj() {
+		for(int i = 0; i < all.size(); i++) {
+			all[i].srednia();
+		}
 		sort(all.begin(), all.end(), porownaj_wyrok());
 	}
 
@@ -343,8 +348,8 @@ int bin_to_dec(bool *bin)
 		cout << "Sredni wyrok: " << srednia() << " lat." << endl << endl;
 	}
 
-  inline bool Populacja::porownaj_wyrok::operator() (Osobnik& osobnik1, Osobnik& osobnik2)
+  inline bool Populacja::porownaj_wyrok::operator() (const Osobnik& osobnik1, const Osobnik& osobnik2)
   {
-      return (osobnik1.srednia() < osobnik2.srednia());
+      return osobnik1.sredni_wyrok < osobnik2.sredni_wyrok;
   }
 
