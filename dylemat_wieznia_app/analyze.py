@@ -16,8 +16,8 @@ def suma_jedynek(t):
     return t[0]
 
 def bit_to_char(bit):
-  if bit == 0: return 'M';
-  elif bit == 1: return 'S';
+  if bit == 0: return 'W';
+  elif bit == 1: return 'Z';
   else: return str(bit)
 
 def convert_to_str(content):
@@ -29,7 +29,7 @@ def convert_to_str(content):
 for osobnik in najlepsze_osobniki:
   for pole in osobnik:
     print(pole, convert_to_str(osobnik[pole]), sep=': ')
-  print("suma_zdrad", suma_jedynek(osobnik["Chromosom"]), sep=': ')
+  print("suma_sypania/zdrad", suma_jedynek(osobnik["Chromosom"]), sep=': ')
   print("-"*int(console_columns))
 
 for osobnik in najlepsze_osobniki:

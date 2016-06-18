@@ -6,13 +6,13 @@
 #include <algorithm>
 
 
-#define WSPOLPRACA 0
-#define ZDRADA 1
+#define WSPOLPRACA 0 //MILCZENIE
+#define ZDRADA 1 // SYPANIE
 
-#define LICZBA_WIEZNIOW 5000
-#define LICZBA_ITERACJI 500
+#define LICZBA_WIEZNIOW 1000
+#define LICZBA_ITERACJI 1
  
-#define wspolczynnik_elitaryzmu 0.1
+#define wspolczynnik_elitaryzmu 0.2
 #define prawdop_mutacji 0.3
 
 const int pozostalosc_osobnikow=(int)(wspolczynnik_elitaryzmu*LICZBA_WIEZNIOW);
@@ -148,6 +148,8 @@ public:
 			//krzyzowanie dla nowy_osobnik1
 			for(int i=0;i<punkt_krzyzowania;i++)
 				nowy_osobnik1.chromosom[i]=p.all[i1].chromosom[i];
+
+			// nowy_osobnik1.wyrok = (p.all[i1].wyrok + p.all[i2].wyrok) / 2; nowy_osobnik2.wyrok = (p.all[i1].wyrok + p.all[i2].wyrok) / 2;
 	
 			for(int i=punkt_krzyzowania;i<64;i++)
 				nowy_osobnik1.chromosom[i]=p.all[i2].chromosom[i];
