@@ -1,0 +1,34 @@
+[
+
+
+{"Osobnik": 507, 
+"Chromosom": [0,1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,0,1,1,1,1,1,0,1,0,0,1,1,0,1,0,0,1,0,1,0,1,1,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,1,0,1,1,1,0,1,1,1], 
+"Poprzednie_rozgrywki": [1, 1, 1, 1, 1, 1, 1], 
+"Sredni_wyrok": 27, 
+"liczba_wiezniow": 500, 
+"liczba_iteracji": 100, 
+"wspolczynnik_elitaryzmu": 0.1, 
+"prawdopodobienstwo_mutacji": 0.3},
+
+{"Osobnik": 505, 
+"Chromosom": [1,1,0,0,0,1,0,1,0,1,1,0,0,0,1,1,0,1,0,0,0,1,1,0,0,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,1,1,1,1], 
+"Poprzednie_rozgrywki": [1, 1, 1, 1, 1, 1, 1], 
+"Sredni_wyrok": 28, 
+"liczba_wiezniow": 500, 
+"liczba_iteracji": 100, 
+"wspolczynnik_elitaryzmu": 0.1, 
+"prawdopodobienstwo_mutacji": 0.3},
+
+{"Osobnik": 1597, 
+"Chromosom": [1,0,1,1,0,1,1,0,1,0,0,0,1,0,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1,1,1,0,1,0,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,1,0,1,1,0,1,1,0,1,1,1,1,0,1], 
+"Poprzednie rozgrywki": [1, 1, 1, 1, 1, 1, 1], 
+"Sredni_wyrok": 26, 
+"liczba_wiezniow": 1000, 
+"liczba_iteracji": 300, 
+"wspolczynnik_elitaryzmu": 0.1, 
+"prawdopodobienstwo_mutacji": 0.3}
+
+
+
+
+]

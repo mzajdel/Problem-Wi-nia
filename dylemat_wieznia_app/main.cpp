@@ -9,7 +9,8 @@
 #define WSPOLPRACA 0
 #define ZDRADA 1
 
-#define LICZBA_WIEZNIOW 500
+#define LICZBA_WIEZNIOW 5000
+#define LICZBA_ITERACJI 500
  
 #define wspolczynnik_elitaryzmu 0.1
 #define prawdop_mutacji 0.3
@@ -249,7 +250,7 @@ int main()
 	Populacja *temp_populacja=new Populacja();
 
 
-for(int i=0;i<100;i++){
+for(int i=0;i<LICZBA_ITERACJI;i++){
 	graj_kazy_z_kazdym(populacja->all);
 
 	populacja->sortuj();
@@ -322,30 +323,36 @@ int bin_to_dec(bool *bin)
 	return dec;
 }
 
-	void Osobnik::wyswietl_chromosom()
+void Osobnik::wyswietl_chromosom()
 	{
-		cout << "Chromosom: " << "[";
+		cout << "\"Chromosom\": " << "[";
 		for (int i = 0; i < 63; i++)
 		{
 			cout << chromosom[i] << ",";
 		}
-		cout << chromosom[63] << "]" << endl;
+		cout << chromosom[63] << "], " << endl;
 	}
 
 	void Osobnik::wyswietl_poprzednie() {
-		cout << "Poprzednie rozgrywki: " << "[";
+		cout << "\"Poprzednie rozgrywki\": " << "[";
 		for (int i = 0; i < 6; i++)
 		{
 			cout << poprzednie[i] << ", ";
 		}
-		cout << poprzednie[5] << "]" << endl;
+		cout << poprzednie[5] << "], " << endl;
 	}
 
 	void Osobnik::wyswietl_osobnika() {
-		cout << "Osobnik: " << id << endl;
+		cout << "{" << "\"Osobnik\": " << id << ", " << endl;
 		wyswietl_chromosom();
 		wyswietl_poprzednie();
-		cout << "Sredni wyrok: " << srednia() << " lat." << endl << endl;
+		cout << "\"Sredni_wyrok\": " << srednia() << ", " << endl <<
+
+		"\"liczba_wiezniow\": " << LICZBA_WIEZNIOW << ", " << endl <<
+		"\"liczba_iteracji\": " << LICZBA_ITERACJI << ", " << endl <<
+		"\"wspolczynnik_elitaryzmu\": " << wspolczynnik_elitaryzmu << ", " << endl << 
+		"\"prawdopodobienstwo_mutacji\": " << prawdop_mutacji <<
+		"}" << endl << endl;
 	}
 
   inline bool Populacja::porownaj_wyrok::operator() (const Osobnik& osobnik1, const Osobnik& osobnik2)
